@@ -25,7 +25,6 @@ def patient_signup_view(request):
             user.save()
             patient=patientForm.save(commit=False)
             patient.user=user
-            patient.bloodgroup=patientForm.cleaned_data['bloodgroup']
             patient.save()
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
             my_patient_group[0].user_set.add(user)
@@ -39,7 +38,7 @@ def patient_dashboard_view(request):
         'requestapproved': bmodels.BloodRequest.objects.all().filter(request_by_patient=patient).filter(status='Approved').count(),
         'requestmade': bmodels.BloodRequest.objects.all().filter(request_by_patient=patient).count(),
         'requestrejected': bmodels.BloodRequest.objects.all().filter(request_by_patient=patient).filter(status='Rejected').count(),
-
+        'patient': patient,
     }
    
     return render(request,'patient/patient_dashboard.html',context=dict)
@@ -50,7 +49,6 @@ def make_request_view(request):
         request_form=bforms.RequestForm(request.POST)
         if request_form.is_valid():
             blood_request=request_form.save(commit=False)
-            blood_request.bloodgroup=request_form.cleaned_data['bloodgroup']
             patient= models.Patient.objects.get(user_id=request.user.id)
             blood_request.request_by_patient=patient
             blood_request.save()

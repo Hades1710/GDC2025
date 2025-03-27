@@ -1,69 +1,322 @@
 {% extends 'donor/donorbase.html' %}
 {% block content %}
+{% load widget_tweaks %}
+{%load static%}
+<head>
+    <style>
+        .request-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .request-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .request-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .request-body {
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .profile-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #3498db;
+            flex-shrink: 0;
+        }
+
+        .request-info {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .no-requests {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .donor-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .donor-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #3498db;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .donor-info {
+            flex-grow: 1;
+        }
+
+        .donor-name {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .donor-email {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .request-body {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .profile-photo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .donor-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .donor-photo {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
 <br><br>
 <div class="container">
-
-
     <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Welcome, {{donor.get_name}}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="donor-profile">
+                        {% if donor.profile_pic %}
+                            <img src="/static/{{donor.profile_pic}}" alt="Donor Profile" class="donor-photo">
+                        {% else %}
+                            <img src="/static/image/default-profile.png" alt="Default Profile" class="donor-photo">
+                        {% endif %}
+                        <div class="donor-info">
+                            <h2 class="donor-name">{{donor.get_name}}</h2>
+                            <p class="donor-email">{{donor.user.email}}</p>
+                        </div>
+                    </div>
 
-      <div class="col-sm-3">
-        <div class="card bg-light">
-          <div class="card-body">
-              <div class="blood">
-                <i class="fas fa-sync-alt xyz"></i>
-              </div><br>
-              <div>
-                Request Made <br>
-                  {{requestmade}}
-              </div>                            
-          </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Your Profile</h4>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Mobile:</strong> {{donor.mobile}}</p>
+                                    <p><strong>Address:</strong> {{donor.address}}</p>
+                                    <p><strong>Maximum Donation Amount:</strong> ${{donor.max_donation_amount}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Your Preferences</h4>
+                                </div>
+                                <div class="card-body">
+                                    <h5>Student Background Preferences:</h5>
+                                    <ul>
+                                        {% for background in student_backgrounds %}
+                                        <li>{{background.name}}</li>
+                                        {% endfor %}
+                                    </ul>
+
+                                    <h5>Educational Interest Preferences:</h5>
+                                    <ul>
+                                        {% for interest in educational_interests %}
+                                        <li>{{interest.name}}</li>
+                                        {% endfor %}
+                                    </ul>
+
+                                    <h5>Specific Needs-Based Preferences:</h5>
+                                    <ul>
+                                        {% for need in specific_needs %}
+                                        <li>{{need.name}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5>Total Requests Made</h5>
+                                    <h2>{{requestmade}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <h5>Pending Requests</h5>
+                                    <h2>{{requestpending}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5>Approved Requests</h5>
+                                    <h2>{{requestapproved}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h5>Rejected Requests</h5>
+                                    <h2>{{requestrejected}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title mt-5">Recent Patient Requests</h3>
+                    {% if patient_requests %}
+                        {% for request in patient_requests %}
+                            <div class="request-card">
+                                <div class="request-header">
+                                    <h5 class="mb-0">{{request.patient_name}}</h5>
+                                    <span class="status-badge {% if request.status == 'Pending' %}status-pending{% elif request.status == 'Approved' %}status-approved{% else %}status-rejected{% endif %}">
+                                        {{request.status}}
+                                    </span>
+                                </div>
+                                <div class="request-body">
+                                    {% if request.request_by_patient.profile_pic %}
+                                        <img src="/static/{{request.request_by_patient.profile_pic}}" alt="Profile Photo" class="profile-photo">
+                                    {% else %}
+                                        <img src="/static/image/default-profile.png" alt="Default Profile" class="profile-photo">
+                                    {% endif %}
+                                    <div class="request-info">
+                                        <div class="info-item">
+                                            <span class="info-label">Age</span>
+                                            <span class="info-value">{{request.patient_age}}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Date</span>
+                                            <span class="info-value">{{request.date}}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Education Level</span>
+                                            <span class="info-value">{{request.get_education_display}}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Educational Interest</span>
+                                            <span class="info-value">{{request.get_educational_interest_display}}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Specific Needs</span>
+                                            <span class="info-value">{{request.get_specific_needs_display}}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Annual Income</span>
+                                            <span class="info-value">₹{{request.annual_income}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info-item" style="grid-column: 1 / -1;">
+                                        <span class="info-label">Reason</span>
+                                        <span class="info-value">{{request.reason}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-requests">
+                            <i class="fas fa-info-circle fa-2x mb-3"></i>
+                            <p>No patient requests available at the moment.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-      </div>
-
-      <div class="col-sm-3">
-        <div class="card bg-light">
-            <div class="card-body">
-                <div class="blood">
-                  <i class="fas fa-sync xyz"></i>
-                </div><br>
-                <div>
-                    Pending Request <br>
-                    {{requestpending}}
-                </div>                            
-            </div>
-          </div>
-      </div>
-
-      <div class="col-sm-3">
-          <div class="card bg-light">
-              <div class="card-body">
-                  <div class="blood">
-                    <i class="fas fa-check-circle xyz"></i>
-                  </div><br>
-                  <div>
-                       Approved Request<br>
-                      {{requestapproved}}
-                  </div>                            
-              </div>
-            </div>
-      </div>
-      <div class="col-sm-3">
-          <div class="card bg-light">
-              <div class="card-body">
-                  <div class="blood">
-                    <i class="fas fa-times-circle xyz"></i>
-                  </div><br>
-                  <div>
-                       Rejected Request <br>
-                      {{requestrejected}}
-                  </div>                            
-              </div>
-            </div>
-        </div>
-
     </div>
-
-
 </div>
 
 <!--

@@ -23,45 +23,40 @@ youtube : youtube.com/lazycoders
    </head>
 <br><br>
 <div class="container">
-    <H4 class="text-center">My Blood Request</H4><br>
+    <H4 class="text-center">My Request History</H4><br>
     <table class="table table-light table-hover table-bordered table-striped">
         <thead class="bg-info">
             <tr>
-                <th scope="col">Patient Name</th>
-                <th scope="col">Patient Age</th>
-                <th scope="col">Reason</th>
-                <th scope="col">Blood Group</th>
-                <th scope="col">Unit</th>
+                <th scope="col">Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Education Level</th>
+                <th scope="col">Educational Interest</th>
+                <th scope="col">Specific Needs</th>
+                <th scope="col">Annual Income</th>
                 <th scope="col">Date</th>
                 <th scope="col">Status</th>
-                
             </tr>
         </thead>
         <tbody>
             {% for t in blood_request %}
             <tr>
-                <td> {{t.patient_name}}</td>
-                
+                <td>{{t.patient_name}}</td>
                 <td>{{t.patient_age}}</td>
-                <td>{{t.reason}}</td>
-                <td>{{t.bloodgroup}}</td>
-                <td>{{t.unit}}</td>
+                <td>{{t.get_education_display}}</td>
+                <td>{{t.get_educational_interest_display}}</td>
+                <td>{{t.get_specific_needs_display}}</td>
+                <td>₹{{t.annual_income}}</td>
                 <td>{{t.date}}</td>
                 {% if t.status == 'Approved' %}
-                <td><span class="label warning"> Approved</span></td>
-                
+                <td><span class="label warning">Approved</span></td>
                 {% elif t.status == 'Rejected' %}
                 <td><span class="label success">Rejected</span></td>
                 {% else %}
                 <td><span style="color: white;margin-left: 0px;" class="label info">Pending</span></td>
                 {% endif %}
-                
-
             </tr>
             {% endfor %}
-
         </tbody>
-    
     </table>
 </div>
 

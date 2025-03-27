@@ -3,30 +3,319 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-      
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.css">
- 
-    <!-- Font special for pages-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-
-    <!-- Main CSS-->
-
-    <link href="{% static "css/main.css" %}"rel="stylesheet" media="all">
+    <link href="{% static "css/main.css" %}" rel="stylesheet" media="all">
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #dee2e6;
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --hover-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
 
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .page-wrapper {
+            padding: 60px 0;
+        }
+
+        .wrapper--w790 {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card-5 {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-5:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .card-heading {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #357abd 100%);
+            border-radius: 20px 20px 0 0;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-heading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                        linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%),
+                        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
+            background-size: 20px 20px;
+            opacity: 0.1;
+        }
+
+        .title {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            letter-spacing: 1px;
+        }
+
+        .card-body {
+            padding: 50px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 100%);
+        }
+
+        .form-row {
+            margin-bottom: 35px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .form-row:hover {
+            transform: translateX(5px);
+        }
+
+        .name {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .name::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background: var(--primary-color);
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .input--style-5 {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .input--style-5:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .student-background-options {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: white;
+            border: 2px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-check::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .form-check:hover {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-check:hover::before {
+            opacity: 1;
+        }
+        
+        .form-check-input {
+            margin-top: 5px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            border-color: var(--primary-color);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .form-check-label {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 0;
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-color);
+        }
+        
+        .form-check-label strong {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .form-check-label small {
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .btn--radius-2 {
+            border-radius: 12px;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #357abd 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+            color: white;
+            display: block;
+            margin: 40px auto 0;
+            min-width: 200px;
+        }
+
+        .btn--radius-2:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+            background: linear-gradient(135deg, #357abd 0%, var(--primary-color) 100%);
+        }
+
+        .form-text {
+            color: #6c757d;
+            font-size: 13px;
+            margin-top: 10px;
+            padding-left: 5px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-color);
+            font-size: 15px;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .login-link a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .login-link a:hover::after {
+            width: 100%;
+        }
+
+        /* File input styling */
+        input[type="file"] {
+            padding: 15px;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .student-background-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-body {
+                padding: 30px;
+            }
+            
+            .title {
+                font-size: 28px;
+            }
+
+            .card-heading {
+                padding: 20px;
+            }
+        }
     </style>
   </head>
   <body>
     {% include "blood/navbar.html" %}
 
-
-
-
     <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
         <div class="wrapper wrapper--w790">
-            <br><br><br>
             <div class="card card-5">
                 <div class="card-heading">
                     <h2 class="title">Donor Signup</h2>
@@ -76,28 +365,73 @@
 
 
                         <div class="form-row">
-                            <div class="name">Blood Group</div>
+                            <div class="name">Max Donation Amount</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <div class="rs-select2 js-select-simple select--no-search">
-                                        <select name="bloodgroup">
-                                            <option disabled="disabled" selected="selected">Choose option</option>
-                                            <option>O+</option>
-                                            <option>O-</option>
-                                            <option>A+</option>
-                                            <option>A-</option>
-                                            <option>B+</option>
-                                            <option>B-</option>
-                                            <option>AB+</option>
-                                            <option>AB-</option>
-                                        </select>
-                                        <div class="select-dropdown"></div>
-                                    </div>
+                                    {% render_field donorForm.max_donation_amount|attr:'required:true'  class="input--style-5"  %}
                                 </div>
                             </div>
                         </div>
 
+                        <div class="form-row">
+                            <div class="name">Student Background Preferences (Optional)</div>
+                            <div class="value">
+                                <div class="student-background-options">
+                                    {% for checkbox in preferenceForm.student_backgrounds %}
+                                        <div class="form-check">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                <strong>{{ checkbox.choice_label }}</strong>
+                                                {% if checkbox.choice_label.description %}
+                                                    <small>{{ checkbox.choice_label.description }}</small>
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <small class="form-text text-muted mt-2">Select the types of students you would like to support based on their background and circumstances.</small>
+                            </div>
+                        </div>
 
+                        <div class="form-row">
+                            <div class="name">Educational Interest Preferences (Optional)</div>
+                            <div class="value">
+                                <div class="student-background-options">
+                                    {% for checkbox in preferenceForm.educational_interests %}
+                                        <div class="form-check">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                <strong>{{ checkbox.choice_label }}</strong>
+                                                {% if checkbox.choice_label.description %}
+                                                    <small>{{ checkbox.choice_label.description }}</small>
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <small class="form-text text-muted mt-2">Choose the educational fields you are interested in supporting.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="name">Specific Needs-Based Preferences (Optional)</div>
+                            <div class="value">
+                                <div class="student-background-options">
+                                    {% for checkbox in preferenceForm.specific_needs %}
+                                        <div class="form-check">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                <strong>{{ checkbox.choice_label }}</strong>
+                                                {% if checkbox.choice_label.description %}
+                                                    <small>{{ checkbox.choice_label.description }}</small>
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <small class="form-text text-muted mt-2">Select the specific educational needs you would like to support.</small>
+                            </div>
+                        </div>
 
                         <div class="form-row">
                             <div class="name">Address</div>
@@ -132,21 +466,19 @@
                             <button class="btn btn--radius-2 btn-danger" type="submit">Register</button>
                         </div>
                     </form>
-                    <br>
-                    <p style="text-align: center;">Already have an account ? <a style="text-decoration: none;" href="/donor/donorlogin">Click here to login</a></p>
-
+                    <div class="login-link">
+                        Already have an account? <a href="/donor/donorlogin">Click here to login</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 {% include "blood/footer.html" %}
-<!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   </body>
 </html>
 <!--
